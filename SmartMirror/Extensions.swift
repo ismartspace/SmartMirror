@@ -9,7 +9,7 @@
 import UIKit
  
  extension UIView {
-    func anchor(top: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?,  paddingTop: CGFloat, paddingLeft: CGFloat, paddingBottom: CGFloat, paddingRight: CGFloat, width: CGFloat, height: CGFloat) {
+    func anchor(top: NSLayoutYAxisAnchor?=nil, left: NSLayoutXAxisAnchor?=nil, bottom: NSLayoutYAxisAnchor?=nil, right: NSLayoutXAxisAnchor?=nil,  paddingTop: CGFloat=0, paddingLeft: CGFloat=0, paddingBottom: CGFloat=0, paddingRight: CGFloat=0, width: CGFloat?=nil, height: CGFloat?=nil) {
         
         translatesAutoresizingMaskIntoConstraints = false
         
@@ -29,11 +29,11 @@ import UIKit
             rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
         }
         
-        if width != 0 {
+        if let width = width{
             widthAnchor.constraint(equalToConstant: width).isActive = true
         }
         
-        if height != 0 {
+        if let height = height {
             heightAnchor.constraint(equalToConstant: height).isActive = true
         }
     }
@@ -67,11 +67,11 @@ import UIKit
     }
     
     static func mainPurple() -> UIColor {
-        return UIColor.rgb(red: 216, green: 191, blue: 216)
+        return UIColor.rgb(red: 225, green: 210, blue: 225)
     }
     
-    static func googleRed() -> UIColor {
-        return UIColor.rgb(red: 220, green: 78, blue: 65)
+    static func mainContainerPurple() -> UIColor {
+        return UIColor.rgb(red: 225, green: 180, blue: 225)
     }
  }
  

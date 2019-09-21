@@ -21,15 +21,18 @@ class SignUpController: UIViewController {
         guard let email = emailTextField.text else{return}
         guard let password = passwordTextField.text else {return}
         guard let username = usernameTextField.text else {return}
+        guard let weight = weightTextField.text else {return}
+        guard let height = heightTextField.text else {return}
         
-        createUser(withEmail: email, password: password, username: username)
+        
+        createUser(withEmail: email, password: password, username: username, weight: weight, height:height)
     }
     
     @objc func handleShowLogin() {
         navigationController?.popViewController(animated: true)
     }
     
-    func createUser(withEmail email: String, password: String, username: String){
+    func createUser(withEmail email: String, password: String, username: String, weight: String, height:String){
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
             if let error = error {
                 print("failed to sign up user with error:", error.localizedDescription)
@@ -39,7 +42,7 @@ class SignUpController: UIViewController {
             //gurad provides protection if the value of uid is nil
             guard let uid = result?.user.uid else {return}
             
-            let values = ["email":email, "username":username]
+            let values = ["email":email, "username":username, "weight":weight, "height":height]
             
             Database.database().reference().child("users").child(uid).updateChildValues(values, withCompletionBlock: {(error, ref) in
                 if let error = error {
@@ -81,6 +84,16 @@ class SignUpController: UIViewController {
         return view.textContainerView(view: view, #imageLiteral(resourceName: "ic_lock_outline_white_2x"), passwordTextField)
     }()
     
+    lazy var weightContainerView: UIView = {
+        let view = UIView()
+        return view.textContainerView(view: view, #imageLiteral(resourceName: "add"), weightTextField)
+    }()
+    
+    lazy var heightContainerView: UIView = {
+        let view = UIView()
+        return view.textContainerView(view: view, #imageLiteral(resourceName: "add"), heightTextField)
+    }()
+    
     lazy var emailTextField: UITextField = {
         let tf = UITextField()
         return tf.textField(withPlaceolder: "Email", isSecureTextEntry: false)
@@ -94,6 +107,16 @@ class SignUpController: UIViewController {
     lazy var passwordTextField: UITextField = {
         let tf = UITextField()
         return tf.textField(withPlaceolder: "Password", isSecureTextEntry: true)
+    }()
+    
+    lazy var weightTextField: UITextField = {
+        let tf = UITextField()
+        return tf.textField(withPlaceolder: "weight", isSecureTextEntry: false)
+    }()
+    
+    lazy var heightTextField: UITextField = {
+        let tf = UITextField()
+        return tf.textField(withPlaceolder: "height", isSecureTextEntry: false)
     }()
     
     
@@ -136,8 +159,14 @@ class SignUpController: UIViewController {
         view.addSubview(passwordContainerView)
         passwordContainerView.anchor(top: usernameContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 32, paddingBottom: 0, paddingRight: 32, width: 0, height: 50)
         
+        view.addSubview(weightContainerView)
+        weightContainerView.anchor(top: passwordContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 32, paddingBottom: 0, paddingRight: 32, width: 0, height: 50)
+        
+        view.addSubview(heightContainerView)
+        heightContainerView.anchor(top: weightContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 32, paddingBottom: 0, paddingRight: 32, width: 0, height: 50)
+        
         view.addSubview(loginButton)
-        loginButton.anchor(top: passwordContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 24, paddingLeft: 32, paddingBottom: 0, paddingRight: 32, width: 0, height: 50)
+        loginButton.anchor(top: heightContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 24, paddingLeft: 32, paddingBottom: 0, paddingRight: 32, width: 0, height: 50)
         
         view.addSubview(dontHaveAccountButton)
         dontHaveAccountButton.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 32, paddingBottom: 12, paddingRight: 32, width: 0, height: 50)
