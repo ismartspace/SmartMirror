@@ -38,6 +38,13 @@ class HomeController: UIViewController {
         return label
     }()
     
+    var BMILabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 28)
+        return label
+    }()
+    
     let summaryLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -63,6 +70,17 @@ class HomeController: UIViewController {
         
         view.addSubview(heightLabel)
         heightLabel.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 20,
+                           paddingLeft: 30)
+        
+        return view
+    }()
+    
+    lazy var BMIContainerView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.mainContainerPurple()
+        
+        view.addSubview(BMILabel)
+        BMILabel.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 20,
                            paddingLeft: 30)
         
         return view
@@ -134,12 +152,35 @@ class HomeController: UIViewController {
             guard let height = value["height"] as? String else { return }
             self.heightLabel.text = "Height :    \(height) cm"
             
-            print("\(weight) \(height)")
+            let weightDouble:Double = Double(weight) as! Double
+            let heightDouble:Double = Double(height) as! Double
+            
+            print("\(weightDouble) \(heightDouble)")
+            
+            let BMI:Double = weightDouble/(heightDouble/100)/(heightDouble/100)
+            var result:String = ""
+            
+            if(BMI < 18.5){
+                result = "underweight"
+            }else if(BMI >= 18.5 && BMI < 25 ){
+                result = "normal"
+            }else if(BMI >= 25 && BMI < 30){
+                result = "overweight"
+            }else if(BMI >= 30){
+                result = "obese"
+            }
+            
+            self.BMILabel.text = "BMI : " + String(format: "%.1f", BMI) + " is " + result
+            
+            
+            
+            
             
             UIView.animate(withDuration: 0.3, animations: {
                 self.nameLabel.alpha = 1
                 self.weightLabel.alpha = 1
                 self.heightLabel.alpha = 1
+                self.BMILabel.alpha = 1
 
             })
         }
@@ -174,6 +215,10 @@ class HomeController: UIViewController {
         view.addSubview(heightContainerView)
         heightContainerView.anchor(top: weightContainerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
         heightContainerView.layer.cornerRadius = 10
+        
+        view.addSubview(BMIContainerView)
+        BMIContainerView.anchor(top: heightContainerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
+        BMIContainerView.layer.cornerRadius = 10
         
 
         
