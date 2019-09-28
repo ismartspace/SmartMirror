@@ -10,6 +10,8 @@ import UIKit
 import Firebase
 
 class HomeController: UIViewController {
+
+    //let weightPickerData = [String](arrayLiteral: "kg", "lb")
     
     var nameLabel: UILabel = {
         let label = UILabel()
@@ -173,9 +175,6 @@ class HomeController: UIViewController {
             self.BMILabel.text = "BMI : " + String(format: "%.1f", BMI) + " is " + result
             
             
-            
-            
-            
             UIView.animate(withDuration: 0.3, animations: {
                 self.nameLabel.alpha = 1
                 self.weightLabel.alpha = 1
@@ -219,11 +218,9 @@ class HomeController: UIViewController {
         view.addSubview(BMIContainerView)
         BMIContainerView.anchor(top: heightContainerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
         BMIContainerView.layer.cornerRadius = 10
-        
-
-        
-        
     }
     
     
 }
+
+//extension HomeController: UIPickerViewDelegate, UIPickerViewDataSource
