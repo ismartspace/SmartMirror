@@ -31,6 +31,7 @@ class LoginController: UIViewController {
             }
             guard let navController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController else { return }
             guard let controller = navController.viewControllers[0] as? HomeController else { return }
+            controller.loadUserData()
             controller.configureViewComponents()
             
             self.dismiss(animated: true, completion: nil )
