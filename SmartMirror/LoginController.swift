@@ -43,6 +43,13 @@ class LoginController: UIViewController {
         // Do any additional setup after loading the view.
         configureViewComponents()
         
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
         
     let logoImageView: UIImageView = {
