@@ -188,11 +188,7 @@ class HomeController: UIViewController {
     func configureViewComponents(){
         view.backgroundColor = UIColor.mainPurple()
         
-        navigationItem.title = "SmartMirror"
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "baseline_arrow_back_white_24dp"), style: .plain, target: self, action: #selector(handleSignOut))
-        navigationItem.leftBarButtonItem?.tintColor = .white
-        navigationController?.navigationBar.barTintColor = UIColor.mainPurple()
+        setupNavigationBar()
         
         view.addSubview(profileImageView)
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -220,7 +216,42 @@ class HomeController: UIViewController {
         BMIContainerView.layer.cornerRadius = 10
     }
     
+    /*
+     Sets up the navigation bar
+     */
+    func setupNavigationBar() {
+        navigationItem.title = "SmartMirror"
+        
+        let leftBarButton = UIBarButtonItem(
+            image: #imageLiteral(resourceName: "baseline_arrow_back_white_24dp"),
+            style: .plain,
+            target: self,
+            action: #selector(handleSignOut)
+        )
+        
+        let rightBarButton = UIBarButtonItem(
+            image: #imageLiteral(resourceName: "cameraIcon"),
+            style: .plain,
+            target: self,
+            action: #selector(enableCameraAccess)
+        )
+                
+        navigationItem.leftBarButtonItem = leftBarButton
+        navigationItem.rightBarButtonItem = rightBarButton
+        
+        navigationItem.leftBarButtonItem?.tintColor = .white
+        navigationItem.rightBarButtonItem?.tintColor = .white
+
+        navigationController?.navigationBar.barTintColor = .mainPurple()
+    }
     
+    /*
+     Enables the camera
+     */
+    @objc func enableCameraAccess() {
+        // TODO: Add camera feature to this function
+        print("goat")
+    }
 }
 
 //extension HomeController: UIPickerViewDelegate, UIPickerViewDataSource
