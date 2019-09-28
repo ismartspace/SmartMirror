@@ -250,7 +250,9 @@ class HomeController: UIViewController {
      */
     @objc func enableCameraAccess() {
         // TODO: Add camera feature to this function
-        print("goat")
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.sourceType = .camera
+        self.present(imagePickerController, animated: true, completion: nil)
     }
 }
 
