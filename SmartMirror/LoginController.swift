@@ -16,6 +16,7 @@ class LoginController: UIViewController {
         guard let email = emailTextField.text else{return}
         guard let password = passwordTextField.text else {return}
         
+        
         logUserIn(withEmail: email, password:  password)
     }
     
@@ -27,6 +28,9 @@ class LoginController: UIViewController {
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
             if let error = error{
                 print("failed to sign user in with error:", error.localizedDescription)
+                let alertController = UIAlertController(title: "Login Error", message: error.localizedDescription, preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
                 return
             }
             guard let navController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController else { return }

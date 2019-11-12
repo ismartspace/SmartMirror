@@ -206,7 +206,7 @@ class HomeController: UIViewController {
         nameLabel.anchor(top: profileImageView.bottomAnchor, paddingTop: 20)
         
         view.addSubview(summaryLabel)
-        summaryLabel.anchor(top: nameLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 50,
+        summaryLabel.anchor(top: nameLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 20,
                             paddingLeft: 30)
         
         view.addSubview(weightContainerView)
@@ -218,7 +218,7 @@ class HomeController: UIViewController {
         heightContainerView.layer.cornerRadius = 10
         
         view.addSubview(BMIContainerView)
-        BMIContainerView.anchor(top: heightContainerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
+        BMIContainerView.anchor(top: heightContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingBottom: 20, paddingRight: 30, height: 100)
         BMIContainerView.layer.cornerRadius = 10
     }
     
