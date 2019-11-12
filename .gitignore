@@ -6,6 +6,7 @@
 #
 build/
 *.pbxuser
+*.pbxproj
 !default.pbxuser
 xcuserdata
 *.xccheckout
@@ -22,7 +23,7 @@ DerivedData
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
 Pods/
-
+Podfile.lock
 # Carthage
 #
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
