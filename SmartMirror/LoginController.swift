@@ -34,6 +34,7 @@ class LoginController: UIViewController {
             controller.loadUserData()
             controller.configureViewComponents()
             
+            self.navigationController?.popViewController(animated: true)
             self.dismiss(animated: true, completion: nil )
         }
     }

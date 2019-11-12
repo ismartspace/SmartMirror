@@ -119,9 +119,13 @@ class HomeController: UIViewController {
     func authenticateUserAndConfigureView(){
         if Auth.auth().currentUser == nil {
             DispatchQueue.main.async {//handle it in main thread before anything happens
+                
                 let navController = UINavigationController(rootViewController: LoginController())
                 navController.navigationBar.barStyle = .black
-                self.present(navController, animated: true , completion: nil)
+                //self.present(navController, animated: true , completion: nil)
+                
+                //UIApplication.shared.keyWindow?.rootViewController = navController
+                self.navigationController?.pushViewController(LoginController(), animated: true)
             }
         }else{
             loadUserData()
@@ -135,7 +139,9 @@ class HomeController: UIViewController {
             try Auth.auth().signOut()
             let navController = UINavigationController(rootViewController: LoginController())
             navController.navigationBar.barStyle = .black
-            self.present(navController, animated: true, completion: nil)
+            //self.present(navController, animated: true, completion: nil)
+            self.navigationController?.pushViewController(LoginController(), animated: true)
+            
         } catch let error {
             print("Failed to sign out with error..", error)
         }
