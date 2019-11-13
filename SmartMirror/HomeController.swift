@@ -98,6 +98,13 @@ class HomeController: UIViewController {
         return view
     }()
     
+    let scrollView: UIScrollView = {
+        let v = UIScrollView()
+        v.backgroundColor = UIColor.mainPurple()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -119,9 +126,13 @@ class HomeController: UIViewController {
     func authenticateUserAndConfigureView(){
         if Auth.auth().currentUser == nil {
             DispatchQueue.main.async {//handle it in main thread before anything happens
+                
                 let navController = UINavigationController(rootViewController: LoginController())
                 navController.navigationBar.barStyle = .black
-                self.present(navController, animated: true , completion: nil)
+                //self.present(navController, animated: true , completion: nil)
+                
+                //UIApplication.shared.keyWindow?.rootViewController = navController
+                self.navigationController?.pushViewController(LoginController(), animated: true)
             }
         }else{
             loadUserData()
@@ -135,7 +146,9 @@ class HomeController: UIViewController {
             try Auth.auth().signOut()
             let navController = UINavigationController(rootViewController: LoginController())
             navController.navigationBar.barStyle = .black
-            self.present(navController, animated: true, completion: nil)
+            //self.present(navController, animated: true, completion: nil)
+            self.navigationController?.pushViewController(LoginController(), animated: true)
+            
         } catch let error {
             print("Failed to sign out with error..", error)
         }
@@ -190,29 +203,37 @@ class HomeController: UIViewController {
         
         setupNavigationBar()
         
-        view.addSubview(profileImageView)
-        profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileImageView.anchor(top: view.topAnchor, paddingTop: 120, width: 120, height: 120)
+        // add the scroll view to self.view
+        self.view.addSubview(scrollView)
+        // constrain the scroll view to 8-pts on each side
+        scrollView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8.0).isActive = true
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8.0).isActive = true
+        scrollView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8.0).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8.0).isActive = true
+        
+        scrollView.addSubview(profileImageView)
+        profileImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        profileImageView.anchor(top: scrollView.topAnchor, paddingTop: 120, width: 120, height: 120)
         profileImageView.layer.cornerRadius = 120/2
         
-        view.addSubview(nameLabel)
-        nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        scrollView.addSubview(nameLabel)
+        nameLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         nameLabel.anchor(top: profileImageView.bottomAnchor, paddingTop: 20)
         
-        view.addSubview(summaryLabel)
-        summaryLabel.anchor(top: nameLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 50,
+        scrollView.addSubview(summaryLabel)
+        summaryLabel.anchor(top: nameLabel.bottomAnchor, left: scrollView.leftAnchor, paddingTop: 20,
                             paddingLeft: 30)
         
-        view.addSubview(weightContainerView)
-        weightContainerView.anchor(top: summaryLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
+        scrollView.addSubview(weightContainerView)
+        weightContainerView.anchor(top: summaryLabel.bottomAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
         weightContainerView.layer.cornerRadius = 10
         
-        view.addSubview(heightContainerView)
-        heightContainerView.anchor(top: weightContainerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
+        scrollView.addSubview(heightContainerView)
+        heightContainerView.anchor(top: weightContainerView.bottomAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
         heightContainerView.layer.cornerRadius = 10
         
-        view.addSubview(BMIContainerView)
-        BMIContainerView.anchor(top: heightContainerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
+        scrollView.addSubview(BMIContainerView)
+        BMIContainerView.anchor(top: heightContainerView.bottomAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingBottom: 20, paddingRight: 30, height: 100)
         BMIContainerView.layer.cornerRadius = 10
     }
     
