@@ -26,6 +26,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         navController.navigationBar.barStyle = .black
         window?.rootViewController = navController
         
+        //If using the story board
+//        let mainStoryBoard = UIStoryboard(name: "Main", bundle: nil)
+//        let redViewController = mainStoryBoard.instantiateViewController(withIdentifier: "mainController") as! ViewController
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        appDelegate.window?.rootViewController = redViewController
+
+        
         return true
     }
 

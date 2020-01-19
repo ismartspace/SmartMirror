@@ -9,6 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    @IBOutlet weak var body: UIImageView!
+    
+    @IBOutlet weak var head: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,5 +20,11 @@ class ViewController: UIViewController {
     }
 
 
+    
+
+    @IBAction func see(_ sender: Any) {
+        head.text = "Head: xxx cm"
+    }
+    
 }
 
