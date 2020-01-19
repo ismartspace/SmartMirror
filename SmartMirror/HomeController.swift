@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 
+
 class HomeController: UIViewController {
 
     //let weightPickerData = [String](arrayLiteral: "kg", "lb")
@@ -100,7 +101,7 @@ class HomeController: UIViewController {
     
     let scrollView: UIScrollView = {
         let v = UIScrollView()
-        v.backgroundColor = UIColor.mainPurple()
+        //v.backgroundColor = UIColor.mainPurple()
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
@@ -135,6 +136,7 @@ class HomeController: UIViewController {
                 self.navigationController?.pushViewController(LoginController(), animated: true)
             }
         }else{
+            updateUserMeasurement()
             loadUserData()
             configureViewComponents()
             
@@ -146,12 +148,34 @@ class HomeController: UIViewController {
             try Auth.auth().signOut()
             let navController = UINavigationController(rootViewController: LoginController())
             navController.navigationBar.barStyle = .black
+            self.navigationController?.navigationBar.isHidden = true
             //self.present(navController, animated: true, completion: nil)
             self.navigationController?.pushViewController(LoginController(), animated: true)
             
         } catch let error {
             print("Failed to sign out with error..", error)
         }
+    }
+    
+    func updateUserMeasurement(){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let neck = "1"
+        let shoulder = "2"
+        let chest = "3"
+        let waist = "4"
+        let hip = "5"
+        let inseam = "6"
+        
+        let values = ["neck":neck, "shoulder":shoulder, "chest":chest, "waist":waist, "hip":hip, "inseam":inseam]
+        
+        Database.database().reference().child("users").child(uid).updateChildValues(values, withCompletionBlock: {(error, ref) in
+            if let error = error {
+                print("Failed to update databasewith error: ",error.localizedDescription)
+                return
+            }
+            
+        })
     }
     
     func loadUserData() {
@@ -166,6 +190,15 @@ class HomeController: UIViewController {
             self.weightLabel.text = "Weight :    \(weight) kg"
             guard let height = value["height"] as? String else { return }
             self.heightLabel.text = "Height :    \(height) cm"
+            
+            let neck = value["neck"] as? String
+            let shoulder = value["shoulder"] as? String
+            let chest = value["chest"] as? String
+            let waist = value["waist"] as? String
+            let hip = value["hip"] as? String
+            let inseam = value["inseam"] as? String
+            
+            print("logging info " + "\(neck) \(shoulder) \(chest) \(waist) \(hip) \(inseam)")
             
             let weightDouble:Double = Double(weight) as! Double
             let heightDouble:Double = Double(height) as! Double
@@ -186,8 +219,7 @@ class HomeController: UIViewController {
             }
             
             self.BMILabel.text = "BMI : " + String(format: "%.1f", BMI) + " is " + result
-            
-            
+                        
             UIView.animate(withDuration: 0.3, animations: {
                 self.nameLabel.alpha = 1
                 self.weightLabel.alpha = 1
@@ -204,7 +236,7 @@ class HomeController: UIViewController {
         setupNavigationBar()
         
         // add the scroll view to self.view
-        self.view.addSubview(scrollView)
+        view.addSubview(scrollView)
         // constrain the scroll view to 8-pts on each side
         scrollView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8.0).isActive = true
         scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8.0).isActive = true
@@ -224,18 +256,20 @@ class HomeController: UIViewController {
         summaryLabel.anchor(top: nameLabel.bottomAnchor, left: scrollView.leftAnchor, paddingTop: 20,
                             paddingLeft: 30)
         
-        scrollView.addSubview(weightContainerView)
-        weightContainerView.anchor(top: summaryLabel.bottomAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
-        weightContainerView.layer.cornerRadius = 10
-        
         scrollView.addSubview(heightContainerView)
-        heightContainerView.anchor(top: weightContainerView.bottomAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 100)
+        heightContainerView.anchor(top: summaryLabel.bottomAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, paddingTop: 10, paddingLeft: 30, paddingRight: 30, width: 0, height: 80)
         heightContainerView.layer.cornerRadius = 10
         
+        scrollView.addSubview(weightContainerView)
+        weightContainerView.anchor(top: heightContainerView.bottomAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, paddingTop: 10, paddingLeft: 30, paddingRight: 30, height: 100)
+        weightContainerView.layer.cornerRadius = 10
+    
+        
         scrollView.addSubview(BMIContainerView)
-        BMIContainerView.anchor(top: heightContainerView.bottomAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingBottom: 20, paddingRight: 30, height: 100)
+        BMIContainerView.anchor(top: weightContainerView.bottomAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 10, paddingLeft: 30, paddingBottom: 20, paddingRight: 30, height: 100)
         BMIContainerView.layer.cornerRadius = 10
     }
+
     
     /*
      Sets up the navigation bar
@@ -243,7 +277,14 @@ class HomeController: UIViewController {
     func setupNavigationBar() {
         navigationItem.title = "SmartMirror"
         
-        let leftBarButton = UIBarButtonItem(
+        let moreButton = UIBarButtonItem(
+            image: #imageLiteral(resourceName: "nav_more_icon"),
+            style: .plain,
+            target: self,
+            action: #selector(handleMore)
+        )
+        
+        let signOutButton = UIBarButtonItem(
             image: #imageLiteral(resourceName: "baseline_arrow_back_white_24dp"),
             style: .plain,
             target: self,
@@ -257,14 +298,47 @@ class HomeController: UIViewController {
             action: #selector(enableCameraAccess)
         )
                 
-        navigationItem.leftBarButtonItem = leftBarButton
+        navigationItem.leftBarButtonItems = [moreButton, signOutButton]
         navigationItem.rightBarButtonItem = rightBarButton
         
-        navigationItem.leftBarButtonItem?.tintColor = .white
+        moreButton.tintColor = .white
+        signOutButton.tintColor = .white
         navigationItem.rightBarButtonItem?.tintColor = .white
 
         navigationController?.navigationBar.barTintColor = .mainPurple()
     }
+    
+    func showControllerForSetting(setting: Setting) {
+        if setting.name == "New Measurements"{
+            let navController = UINavigationController(rootViewController: CameraController())
+            navController.navigationBar.barStyle = .black
+            //self.present(navController, animated: true, completion: nil)
+            self.navigationController?.pushViewController(CameraController(), animated: true)
+        }else if setting.name == "Help"{
+            let navController = UINavigationController(rootViewController: HelpController())
+            navController.navigationBar.barStyle = .black
+            //self.present(navController, animated: true, completion: nil)
+            self.navigationController?.pushViewController(HelpController(), animated: true)
+        }else if setting.name == "Settings"{
+            let navController = UINavigationController(rootViewController: SettingController())
+            navController.navigationBar.barStyle = .black
+            //self.present(navController, animated: true, completion: nil)
+            self.navigationController?.pushViewController(SettingController(), animated: true)
+        }else{
+            let dummySettingsViewController = UIViewController()
+            dummySettingsViewController.view.backgroundColor = UIColor.white
+            dummySettingsViewController.navigationItem.title = setting.name
+            navigationController?.navigationBar.tintColor = UIColor.white
+            navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+            navigationController?.pushViewController(dummySettingsViewController, animated: true)
+        }
+    }
+    
+    lazy var settingsLauncher: SettingsLauncher = {
+        let launcher = SettingsLauncher()
+        launcher.homeController = self
+        return launcher
+    }()
     
     /*
      Enables the camera
@@ -275,6 +349,14 @@ class HomeController: UIViewController {
         imagePickerController.sourceType = .camera
         self.present(imagePickerController, animated: true, completion: nil)
     }
+    
+    let settingLauncher = SettingsLauncher()
+    @objc func handleMore(){
+        settingLauncher.homeController = self
+        settingLauncher.showSettings()
+    }
+    
+
 }
 
 //extension HomeController: UIPickerViewDelegate, UIPickerViewDataSource

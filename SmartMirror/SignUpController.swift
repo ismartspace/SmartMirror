@@ -33,9 +33,27 @@ class SignUpController: UIViewController {
     }
     
     func createUser(withEmail email: String, password: String, username: String, weight: String, height:String){
+        if((weight as NSString).doubleValue < 20 || (weight as NSString).doubleValue > 180 || (weight as NSString).doubleValue.isNaN){
+            let alertController = UIAlertController(title: "Sign Up Unsuccessful", message: "weight should be within 20kg and 180kg", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        
+        if((height as NSString).doubleValue < 100 || (height as NSString).doubleValue > 220 || (height as NSString).doubleValue.isNaN){
+            let alertController = UIAlertController(title: "Sign Up Unsuccessful", message: "height should be within 100cm and 220cm", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
             if let error = error {
-                print("failed to sign up user with error:", error.localizedDescription)
+                print("failed to create user with error:", error.localizedDescription)
+
+                let alertController = UIAlertController(title: "Sign Up Unsuccessful", message: error.localizedDescription, preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
                 return
             }
             
@@ -49,11 +67,19 @@ class SignUpController: UIViewController {
                     print("Failed to update databasewith error: ",error.localizedDescription)
                     return
                 }
+
+                print("Sign Up Successful")
+                let alertController = UIAlertController(title: "Sign Up Successful", message: "Please login with your email and password", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
                 
                 guard let navController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController else { return }
                 guard let controller = navController.viewControllers[0] as? HomeController else { return }
+                controller.loadUserData()
                 controller.configureViewComponents()
-                 
+                //self.navigationController?.pushViewController(HomeController(), animated: true)
+                
+                self.navigationController?.popViewController(animated: true)
                 self.dismiss(animated: true, completion: nil)
             })
         }
@@ -145,6 +171,7 @@ class SignUpController: UIViewController {
     func configureViewComponents() {
         view.backgroundColor = UIColor.mainPurple()
         navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.tintColor = .white
         
         view.addSubview(logoImageView)
         logoImageView.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 60, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 150, height: 150)

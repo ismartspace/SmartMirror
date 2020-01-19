@@ -35,10 +35,14 @@ class LoginController: UIViewController {
             }
             guard let navController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController else { return }
             guard let controller = navController.viewControllers[0] as? HomeController else { return }
+            
             controller.loadUserData()
             controller.configureViewComponents()
+            self.navigationController?.navigationBar.isHidden = false
+            self.navigationController?.navigationBar.tintColor = .white
             
             self.navigationController?.popViewController(animated: true)
+            
             self.dismiss(animated: true, completion: nil )
         }
     }
