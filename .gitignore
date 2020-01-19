@@ -9,6 +9,7 @@ build/
 *.pbxproj
 !default.pbxuser
 xcuserdata
+opencv2.framework/
 *.xccheckout
 *.moved-aside
 DerivedData

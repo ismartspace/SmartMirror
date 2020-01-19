@@ -51,6 +51,9 @@ class LoginController: UIViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
 
         view.addGestureRecognizer(tap)
+        
+        // TODO: to be removed
+        print("opencv2 version: \(OpenCVWrapper.openCVVersionString())")
     }
     
     @objc func dismissKeyboard() {

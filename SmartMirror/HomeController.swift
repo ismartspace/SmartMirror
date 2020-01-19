@@ -109,6 +109,9 @@ class HomeController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         authenticateUserAndConfigureView()
+        
+        // TODO: to be removed
+        print("opencv2 version: \(OpenCVWrapper.openCVVersionString())")
     }
     
     @objc func handleSignOut(){
