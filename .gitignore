@@ -8,7 +8,7 @@ build/
 *.pbxuser
 *.pbxproj
 !default.pbxuser
-xcuserdata
+xcuserdata/
 opencv2.framework/
 *.xccheckout
 *.moved-aside
