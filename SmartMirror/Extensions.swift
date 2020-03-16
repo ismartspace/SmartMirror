@@ -99,7 +99,9 @@ import UIKit
     }
     
     static func mainPurple() -> UIColor {
-        return UIColor.rgb(red: 225, green: 210, blue: 225)
+        //Too light
+        //return UIColor.rgb(red: 225, green: 210, blue: 225)
+        return UIColor.rgb(red: 128, green: 0, blue: 128)
     }
     
     static func mainContainerPurple() -> UIColor {
