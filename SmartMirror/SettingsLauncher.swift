@@ -37,7 +37,7 @@ class SettingsLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
     let cellHeight: CGFloat = 50
     
     let settings: [Setting] = {
-        return [Setting(name: "New Measurements", imageName: "tape-measure"), Setting(name: "Settings", imageName: "settings"), Setting(name: "Send Feedback", imageName: "feedback"), Setting(name: "Help", imageName: "help"), Setting(name: "Cancel", imageName: "cancel")]
+        return [Setting(name: "New Measurements", imageName: "tape-measure"), Setting(name: "Settings", imageName: "settings"), Setting(name: "Send Feedback", imageName: "feedback"), Setting(name: "Help", imageName: "help"), Setting(name: "Logout", imageName:"baseline_arrow_back_white_24dp"), Setting(name: "Cancel", imageName: "cancel")]
     }()
     
     func showSettings() {
@@ -78,8 +78,10 @@ class SettingsLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
                 self.collectionView.frame = CGRect(x: 0, y: window.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
             }
         }, completion: { (_) in
-            if setting.name != "" && setting.name != "Cancel" {
-                self.homeController?.showControllerForSetting(setting: setting)
+            if setting.name != "" && setting.name != "Cancel"  {
+                if self.settings.contains(setting){
+                    self.homeController?.showControllerForSetting(setting: setting)
+                }
             }
         })
     }
